@@ -2,8 +2,7 @@
 
 ### This project uses MetricStyle for Android 17 and BigTextStyle on Android 16 to display Live Update android 17 (API 37) with music playback management
 
-![Android](https://shields.io)
-![Kotlin](https://shields.io)
+![Android](https://shields.io) ![Kotlin](https://shields.io)
 
 
 ## Visual project view 
