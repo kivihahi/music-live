@@ -17,11 +17,11 @@
 
 
 ## Available versions of android:
-| Версия Android | API | Статус поддержки |
+| Android version | API | Support Status |
 | :--- | :---: | :--- |
-| **Android 17** | 37 | Полная поддержка (`MetricStyle` и чип Live Update) |
-| **Android 16** | 36 | Базовая работа (`BigTextStyle`) |
-| **Android 15 и ниже** | ≤ 35 | Не поддерживается |
+| **Android 17** | 37 | Full support (`MetricStyle` and chip Live Update) |
+| **Android 16** | 36 | Basic work (`BigTextStyle`) |
+| **Android 15 and below** | ≤ 35 | Not supported |
 
 
 ## Android Restrictions
