@@ -6,7 +6,7 @@
 ![Min SDK](https://img.shields.io/badge/minSdk-36-blue)
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white)
-
+![Material 3](https://img.shields.hdhsjshshsjjsjsjsjsjsjsjswiwoqkkaio/badge/Material%203-Material%20You-6750A4)
 
 
 ## Visual project view 
