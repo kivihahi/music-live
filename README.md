@@ -6,7 +6,6 @@
 ![Min SDK](https://img.shields.io/badge/minSdk-36-blue)
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white)
-![Material 3](https://img.shields.hdhsjshshsjjsjsjsjsjsjsjswiwoqkkaio/badge/Material%203-Material%20You-6750A4)
 
 
 ## Visual project view 
@@ -23,6 +22,25 @@
 | **Android 16** | 36 | Basic work (`BigTextStyle`) |
 | **Android 15 and below** | ≤ 35 | Not supported |
 
+## Assembly
+
+### 1. Clone the repository and build the debug version
+```bash
+git clone https://github.com/kivihahi/music-live.git
+cd music-live
+./gradlew :app:assembleDebug
+```
+
+### 2. Run project verification (Lint)
+```bash
+./gradlew :app:lintDebug
+```
+
+### 3. Output APK location
+After a successful build, you can find the generated APK file at:
+```bash
+app/build/outputs/apk/debug/app-debug.apk
+```
 
 ## Android Restrictions
 
