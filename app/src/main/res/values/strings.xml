@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Music Live</string>
+    <string name="listener_label">Music Live: доступ к медиасессиям</string>
+    <string name="channel_name">Сейчас играет</string>
+    <string name="channel_description">Текущий трек и управление воспроизведением</string>
+</resources>
