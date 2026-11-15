@@ -49,7 +49,8 @@ object NotificationFactory {
         val duration = nowPlaying?.durationMs ?: 0L
 
         val builder = Notification.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_music_note)
+            .setSmallIcon(R.drawable.ic_notification_mark)
+            .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_notification_large))
             .setContentTitle(title)
             .setContentText(artist)
             .setContentIntent(contentIntent(context))
@@ -63,10 +64,6 @@ object NotificationFactory {
 
         if (Build.VERSION.SDK_INT_FULL >= Build.VERSION_CODES_FULL.BAKLAVA_1) {
             builder.setRequestPromotedOngoing(true)
-        }
-
-        if (nowPlaying?.artwork != null) {
-            builder.setLargeIcon(nowPlaying.artwork)
         }
 
         if (Build.VERSION.SDK_INT >= 37) {

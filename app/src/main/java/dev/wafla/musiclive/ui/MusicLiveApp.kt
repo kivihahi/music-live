@@ -679,7 +679,7 @@ private fun AlbumArt(bitmap: Bitmap?, size: androidx.compose.ui.unit.Dp) {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_music_note),
+                painter = painterResource(R.drawable.ic_app_mark),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(size / 2),

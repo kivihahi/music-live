@@ -12,8 +12,8 @@ android {
         applicationId = "dev.wafla.musiclive"
         minSdk = 36
         targetSdk = 37
-        versionCode = 4
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "1.2"
     }
 
     compileOptions {
