@@ -12,7 +12,7 @@
 
 | | | |
 |:---:|:---:|:---:|
-| ![Status bar](screenshots/banner1.png) | ![Controls](screenshots/banner2.png) | ![Compatibility](screenshots/banner3.png) |
+| ![Status bar](banner1.png) | ![Controls](banner2.png) | ![Compatibility](banner3.png) |
 
 
 
