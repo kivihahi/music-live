@@ -8,11 +8,12 @@
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white)
 
 
-## Visual project view 
-<p align="center">
-  <img src="screenshots/screen1.png" width="250" />
-  <img src="screenshots/screen2.png" width="250" />
-</p>
+## Visual project view
+
+| | | |
+|:---:|:---:|:---:|
+| ![Status bar](screenshots/banner1.png) | ![Controls](screenshots/banner2.png) | ![Compatibility](screenshots/banner3.png) |
+
 
 
 ## Available versions of android:
