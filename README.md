@@ -6,6 +6,7 @@
 ![Min SDK](https://img.shields.io/badge/minSdk-36-blue)
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 
 ## Visual project view
@@ -49,3 +50,7 @@ app/build/outputs/apk/debug/app-debug.apk
 Notification of the advance. Public APIs do not allow you to hide the card from the curtain,
 leaving only the chip. The system itself decides whether to show the chip, and it can
 depend on the manufacturer of the device.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
