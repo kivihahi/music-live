@@ -24,13 +24,13 @@ class LiveUpdateService : Service() {
         fun start(context: Context) {
             val intent = Intent(context, LiveUpdateService::class.java)
                 .setAction(ACTION_START)
-            context.startForegroundService(intent)
+            context.startService(intent)
         }
 
         fun refresh(context: Context) {
             val intent = Intent(context, LiveUpdateService::class.java)
                 .setAction(ACTION_REFRESH)
-            context.startForegroundService(intent)
+            context.startService(intent)
         }
 
         fun stop(context: Context) {
@@ -66,7 +66,6 @@ class LiveUpdateService : Service() {
             return START_NOT_STICKY
         }
 
-        ensureForeground()
         updateNotification()
         handler.removeCallbacks(ticker)
         handler.postDelayed(ticker, 1_000L)
@@ -75,6 +74,7 @@ class LiveUpdateService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(ticker)
+        notificationManager.cancel(NotificationFactory.NOTIFICATION_ID)
         LiveUpdateStatus.serviceRunning = false
         startedForeground = false
         super.onDestroy()
@@ -82,10 +82,23 @@ class LiveUpdateService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    private fun ensureForeground() {
-        val notification = buildNotification()
+    private fun updateNotification() {
+        val nowPlaying = MusicRepository.nowPlaying
+        if (nowPlaying == null) {
+            hideNotification()
+            return
+        }
+
+        val notification = NotificationFactory.build(
+            context = this,
+            nowPlaying = nowPlaying,
+            includeActions = AppPrefs.areNotificationActionsEnabled(this),
+        )
+
         try {
-            if (!startedForeground) {
+            if (startedForeground) {
+                notificationManager.notify(NotificationFactory.NOTIFICATION_ID, notification)
+            } else {
                 startForeground(
                     NotificationFactory.NOTIFICATION_ID,
                     notification,
@@ -95,28 +108,27 @@ class LiveUpdateService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Cannot enter foreground", e)
-            LiveUpdateStatus.lastError = "Не удалось запустить foreground-сервис: ${e.message}"
-        }
-    }
-
-    private fun updateNotification() {
-        val notification = buildNotification()
-        try {
-            notificationManager.notify(NotificationFactory.NOTIFICATION_ID, notification)
-        } catch (e: Exception) {
-            Log.e(TAG, "Cannot post notification", e)
-            LiveUpdateStatus.lastError = "Не удалось опубликовать уведомление: ${e.message}"
-            return
+            LiveUpdateStatus.lastError = "Не удалось показать уведомление: ${e.message}"
+            try {
+                notificationManager.notify(NotificationFactory.NOTIFICATION_ID, notification)
+            } catch (notifyError: Exception) {
+                Log.e(TAG, "Cannot post notification", notifyError)
+                LiveUpdateStatus.lastError =
+                    "Не удалось опубликовать уведомление: ${notifyError.message}"
+            }
         }
         inspectPromotion(notification)
     }
 
-    private fun buildNotification(): Notification =
-        NotificationFactory.build(
-            context = this,
-            nowPlaying = MusicRepository.nowPlaying,
-            includeActions = AppPrefs.areNotificationActionsEnabled(this),
-        )
+    private fun hideNotification() {
+        notificationManager.cancel(NotificationFactory.NOTIFICATION_ID)
+        if (startedForeground) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            startedForeground = false
+        }
+        LiveUpdateStatus.hasPromotableCharacteristics = false
+        LiveUpdateStatus.actuallyPromoted = false
+    }
 
     private fun inspectPromotion(notification: Notification) {
         val hasPromotable = notification.hasPromotableCharacteristics()

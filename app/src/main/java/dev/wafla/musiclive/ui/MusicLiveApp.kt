@@ -123,7 +123,7 @@ fun MusicLiveApp(resumeTick: Int) {
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = if (selectedTab == 0) "Music Live" else "Журнал",
+                            text = if (selectedTab == 0) "Главная" else "Журнал",
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -324,13 +324,13 @@ private fun PermissionsCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "1. Доступ",
+                text = "Доступ",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Онбординг: доступ к уведомлениям, POST_NOTIFICATIONS и экран Live Updates.",
+                text = "Онбординг: доступ к уведомлениям",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -339,7 +339,7 @@ private fun PermissionsCard(
                 title = "Слушатель уведомлений",
                 detail = "Нужен для MediaSessionManager.getActiveSessions()",
                 granted = listenerEnabled,
-                action = "Открыть",
+                action = if (listenerEnabled) "Настройки" else "Разрешить",
                 onAction = {
                     openIntent(
                         context,
@@ -370,7 +370,7 @@ private fun PermissionsCard(
                 title = "Live Updates",
                 detail = "canPostPromotedNotifications() = $canPostPromoted",
                 granted = canPostPromoted,
-                action = "Настройки",
+                action = if (canPostPromoted) "Настройки" else "Разрешить",
                 onAction = { openPromotionSettings(context) },
             )
         }
@@ -403,7 +403,7 @@ private fun PrototypeCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Одно ongoing-уведомление с двумя метриками: прошло и осталось. Чип в статус-баре только с иконкой, без времени. Выключите кнопки, чтобы проверить чистый прототип без Notification.Action.",
+                text = "Одно ongoing-уведомление с двумя метриками: прошло и осталось",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -631,30 +631,41 @@ private fun PermissionRow(
     action: String,
     onAction: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = title, style = MaterialTheme.typography.bodyMedium)
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = title, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = detail,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             Text(
-                text = detail,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = if (granted) "OK" else "НЕТ",
+                style = MaterialTheme.typography.labelMedium,
+                color = if (granted) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.error
+                },
+                fontWeight = FontWeight.SemiBold,
             )
         }
-        Text(
-            text = if (granted) "OK" else "НЕТ",
-            style = MaterialTheme.typography.labelMedium,
-            color = if (granted) {
-                MaterialTheme.colorScheme.primary
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            if (granted) {
+                OutlinedButton(onClick = onAction) {
+                    Text(action)
+                }
             } else {
-                MaterialTheme.colorScheme.error
-            },
-            fontWeight = FontWeight.SemiBold,
-        )
-        TextButton(onClick = onAction) {
-            Text(action)
+                Button(onClick = onAction) {
+                    Text(action)
+                }
+            }
         }
     }
 }
