@@ -1,0 +1,127 @@
+<resources>
+    <string name="app_name">Music Live</string>
+    <string name="listener_label">Music Live: media session access</string>
+    <string name="channel_name">Now playing</string>
+    <string name="channel_description">Current track and playback controls</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_journal">Journal</string>
+    <string name="tab_settings">Settings</string>
+
+    <string name="now_playing_title">Now playing</string>
+    <string name="no_active_media_session">No active media session</string>
+    <string name="start_playback_hint">Start music in any player</string>
+    <string name="album_art">Album art</string>
+
+    <string name="permissions_title">Access</string>
+    <string name="permissions_subtitle">Onboarding: notification access</string>
+    <string name="permission_listener_title">Notification listener</string>
+    <string name="permission_listener_detail">Required for MediaSessionManager.getActiveSessions()</string>
+    <string name="permission_notifications_title">POST_NOTIFICATIONS</string>
+    <string name="permission_notifications_detail">Permission to show notifications</string>
+    <string name="permission_live_updates_title">Live Updates</string>
+    <string name="permission_live_updates_detail">canPostPromotedNotifications() = %1$s</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_settings">Settings</string>
+    <string name="status_ok">OK</string>
+    <string name="status_no">NO</string>
+
+    <string name="live_update_title">2. Live Update</string>
+    <string name="live_update_description">One ongoing notification with two metrics: elapsed and remaining</string>
+    <string name="previous_track">Previous track</string>
+    <string name="next_track">Next track</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="notification_buttons">Notification buttons</string>
+    <string name="notification_buttons_detail">Notification.Action + PendingIntent</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="refresh">Refresh</string>
+    <string name="listener_disabled_warning">Notification listener is off: the notification will show a placeholder until access is granted.</string>
+    <string name="notifications_disabled_warning">POST_NOTIFICATIONS is not granted: the system may not show the notification.</string>
+
+    <string name="promotion_title">3. Chip check</string>
+    <string name="promotion_service_not_running">The service is not running. Start it in step 2 and check the values below.</string>
+    <string name="promotion_not_promotable">hasPromotableCharacteristics() = false: the notification does not meet the promoted requirements. Check ongoing, title, style, absence of a custom view, and channel importance.</string>
+    <string name="promotion_cannot_post">canPostPromotedNotifications() = false: Live Updates are disabled for the app or the system. Open the Live Updates screen.</string>
+    <string name="promotion_promoted">The system assigned FLAG_PROMOTED_ONGOING. The chip should be available in the status bar; behavior may vary on OEM builds.</string>
+    <string name="promotion_not_promoted">The system did not assign FLAG_PROMOTED_ONGOING. This is expected for media players: official Live Updates in Android 16/17 do not promise a music chip. The notification will remain in the shade.</string>
+    <string name="promotion_checking">The check runs after the notification is posted.</string>
+    <string name="check_again">Check again</string>
+    <string name="live_updates">Live Updates</string>
+    <string name="diagnostic_yes">yes</string>
+    <string name="diagnostic_no">no</string>
+
+    <string name="error_start_service">Could not start the service: %1$s</string>
+    <string name="error_open_settings">Could not open settings: %1$s</string>
+    <string name="error_show_notification">Could not show the notification: %1$s</string>
+    <string name="error_post_notification">Could not post the notification: %1$s</string>
+
+    <string name="language_title">Language</string>
+    <string name="language_subtitle">App interface language</string>
+    <string name="language_system">System</string>
+    <string name="language_russian">Russian</string>
+    <string name="language_english">English</string>
+    <string name="language_ukrainian">Ukrainian</string>
+
+    <string name="about_title">About</string>
+    <string name="about_subtitle">Author, license, and feedback</string>
+    <string name="about_author_label">Author</string>
+    <string name="about_github_label">GitHub</string>
+    <string name="about_license_label">License</string>
+    <string name="about_license_value">MIT License</string>
+    <string name="about_report_bug">Report a bug</string>
+    <string name="about_report_subject">Music Live: bug report</string>
+
+    <string name="journal_title">Update history</string>
+    <string name="journal_subtitle">What changed in the app</string>
+    <string name="journal_version">Version %1$s</string>
+    <string name="journal_1_4_title">Codename: dango</string>
+    <string-array name="journal_1_4_changes">
+        <item>text beta</item>
+    </string-array>
+    <string name="journal_1_3_title">Codename: syrup</string>
+    <string-array name="journal_1_3_changes">
+        <item>Ukrainian and English languages added</item>
+        <item>Settings tab added</item>
+        <item>Welcome screen added</item>
+    </string-array>
+    <string name="journal_1_2_title">Release 1.2</string>
+    <string-array name="journal_1_2_changes">
+        <item>Images added to the update history</item>
+        <item>Clear action buttons added to the main screen</item>
+        <item>Live Update notification behavior improved</item>
+    </string-array>
+    <string name="journal_1_1_title">Icon update</string>
+    <string-array name="journal_1_1_changes">
+        <item>New app icon</item>
+        <item>Icon background uses the dark Monet accent</item>
+        <item>The new icon is used in the app, notification, and chip</item>
+        <item>Icon colors follow the system theme</item>
+        <item>Chip icon enlarged, app icon reduced</item>
+    </string-array>
+    <string name="journal_1_0_title">Main changes</string>
+    <string-array name="journal_1_0_changes">
+        <item>Live Update chip in the status bar</item>
+        <item>Playback control from the notification</item>
+        <item>Promoted status diagnostics</item>
+        <item>Elapsed and remaining in the expanded notification</item>
+        <item>Short buttons: Previous, Pause, Next</item>
+        <item>Two tabs: Home and Journal</item>
+        <item>Dynamic system colors</item>
+    </string-array>
+
+    <string name="welcome_title">Welcome to Music Live</string>
+    <string name="welcome_text">The app shows the current track and controls music right from Live Update. Notification access is required.</string>
+    <string name="ok">OK</string>
+
+    <string name="notification_no_player">No active player</string>
+    <string name="notification_start_music">Start music in any player</string>
+    <string name="media_session_active">Media session active</string>
+    <string name="action_back">Back</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_play">Play</string>
+    <string name="action_forward">Forward</string>
+    <string name="metric_elapsed">Elapsed</string>
+    <string name="metric_remaining">Remaining</string>
+</resources>

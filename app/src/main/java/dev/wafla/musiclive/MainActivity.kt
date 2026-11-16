@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableIntStateOf
+import dev.wafla.musiclive.data.MusicRepository
 import dev.wafla.musiclive.notification.NotificationFactory
 import dev.wafla.musiclive.ui.MusicLiveApp
 
@@ -15,6 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         NotificationFactory.ensureChannel(this)
+        MusicRepository.setFallbackTitle(getString(R.string.media_session_active))
         setContent {
             MusicLiveApp(resumeTick = resumeTick.intValue)
         }

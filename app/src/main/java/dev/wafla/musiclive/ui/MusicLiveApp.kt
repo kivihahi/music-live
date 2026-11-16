@@ -61,6 +61,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -82,6 +83,7 @@ fun MusicLiveApp(resumeTick: Int) {
     }
     var refreshKey by remember { mutableIntStateOf(0) }
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+    var showWelcome by remember { mutableStateOf(!AppPrefs.isWelcomeShown(context)) }
     var actionsEnabled by remember {
         mutableStateOf(AppPrefs.areNotificationActionsEnabled(context))
     }
@@ -123,7 +125,11 @@ fun MusicLiveApp(resumeTick: Int) {
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = if (selectedTab == 0) "Главная" else "Журнал",
+                            text = when (selectedTab) {
+                                0 -> stringResource(R.string.tab_home)
+                                1 -> stringResource(R.string.tab_journal)
+                                else -> stringResource(R.string.tab_settings)
+                            },
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
@@ -143,7 +149,7 @@ fun MusicLiveApp(resumeTick: Int) {
                                 contentDescription = null,
                             )
                         },
-                        label = { Text("Главная") },
+                        label = { Text(stringResource(R.string.tab_home)) },
                     )
                     NavigationBarItem(
                         selected = selectedTab == 1,
@@ -154,15 +160,34 @@ fun MusicLiveApp(resumeTick: Int) {
                                 contentDescription = null,
                             )
                         },
-                        label = { Text("Журнал") },
+                        label = { Text(stringResource(R.string.tab_journal)) },
+                    )
+                    NavigationBarItem(
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_settings),
+                                contentDescription = null,
+                            )
+                        },
+                        label = { Text(stringResource(R.string.tab_settings)) },
                     )
                 }
             },
         ) { innerPadding ->
-            if (selectedTab == 1) {
-                JournalScreen(innerPadding)
-            } else {
-            LazyColumn(
+            when (selectedTab) {
+                1 -> JournalScreen(innerPadding)
+                2 -> SettingsScreen(
+                    innerPadding = innerPadding,
+                    listenerEnabled = listenerEnabled,
+                    notificationGranted = notificationGranted,
+                    canPostPromoted = canPostPromoted,
+                    onRequestNotificationPermission = {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    },
+                )
+                else -> LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
@@ -176,17 +201,6 @@ fun MusicLiveApp(resumeTick: Int) {
             ) {
                 item {
                     NowPlayingCard(now = now)
-                }
-                item {
-                    PermissionsCard(
-                        context = context,
-                        listenerEnabled = listenerEnabled,
-                        notificationGranted = notificationGranted,
-                        canPostPromoted = canPostPromoted,
-                        onRequestNotificationPermission = {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        },
-                    )
                 }
                 item {
                     PrototypeCard(
@@ -240,6 +254,14 @@ fun MusicLiveApp(resumeTick: Int) {
             }
             }
         }
+        if (showWelcome) {
+            WelcomeDialog(
+                onDismiss = {
+                    AppPrefs.setWelcomeShown(context)
+                    showWelcome = false
+                },
+            )
+        }
     }
 }
 
@@ -252,7 +274,7 @@ private fun NowPlayingCard(now: NowPlaying?) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Сейчас играет",
+                text = stringResource(R.string.now_playing_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -262,14 +284,14 @@ private fun NowPlayingCard(now: NowPlaying?) {
                 Spacer(modifier = Modifier.width(14.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = now?.title ?: "Нет активной медиасессии",
+                        text = now?.title ?: stringResource(R.string.no_active_media_session),
                         style = MaterialTheme.typography.titleLarge,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = now?.artist ?: "Включите музыку в любом плеере",
+                        text = now?.artist ?: stringResource(R.string.start_playback_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
@@ -310,74 +332,6 @@ private fun NowPlayingCard(now: NowPlaying?) {
 }
 
 @Composable
-private fun PermissionsCard(
-    context: Context,
-    listenerEnabled: Boolean,
-    notificationGranted: Boolean,
-    canPostPromoted: Boolean,
-    onRequestNotificationPermission: () -> Unit,
-) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Доступ",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Онбординг: доступ к уведомлениям",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            PermissionRow(
-                title = "Слушатель уведомлений",
-                detail = "Нужен для MediaSessionManager.getActiveSessions()",
-                granted = listenerEnabled,
-                action = if (listenerEnabled) "Настройки" else "Разрешить",
-                onAction = {
-                    openIntent(
-                        context,
-                        Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
-                    )
-                },
-            )
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            PermissionRow(
-                title = "POST_NOTIFICATIONS",
-                detail = "Разрешение на показ уведомлений",
-                granted = notificationGranted,
-                action = if (notificationGranted) "Настройки" else "Разрешить",
-                onAction = {
-                    if (notificationGranted) {
-                        openIntent(
-                            context,
-                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                                .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName),
-                        )
-                    } else {
-                        onRequestNotificationPermission()
-                    }
-                },
-            )
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            PermissionRow(
-                title = "Live Updates",
-                detail = "canPostPromotedNotifications() = $canPostPromoted",
-                granted = canPostPromoted,
-                action = if (canPostPromoted) "Настройки" else "Разрешить",
-                onAction = { openPromotionSettings(context) },
-            )
-        }
-    }
-}
-
-@Composable
 private fun PrototypeCard(
     context: Context,
     now: NowPlaying?,
@@ -397,13 +351,13 @@ private fun PrototypeCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "2. Live Update",
+                text = stringResource(R.string.live_update_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Одно ongoing-уведомление с двумя метриками: прошло и осталось",
+                text = stringResource(R.string.live_update_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -419,7 +373,7 @@ private fun PrototypeCard(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_skip_previous),
-                        contentDescription = "Предыдущий трек",
+                        contentDescription = stringResource(R.string.previous_track),
                     )
                 }
                 FilledIconButton(
@@ -434,7 +388,11 @@ private fun PrototypeCard(
                         painter = painterResource(
                             if (now?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play,
                         ),
-                        contentDescription = if (now?.isPlaying == true) "Пауза" else "Играть",
+                        contentDescription = if (now?.isPlaying == true) {
+                            stringResource(R.string.pause)
+                        } else {
+                            stringResource(R.string.play)
+                        },
                     )
                 }
                 IconButton(
@@ -443,7 +401,7 @@ private fun PrototypeCard(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_skip_next),
-                        contentDescription = "Следующий трек",
+                        contentDescription = stringResource(R.string.next_track),
                     )
                 }
             }
@@ -457,11 +415,11 @@ private fun PrototypeCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Кнопки в уведомлении",
+                        text = stringResource(R.string.notification_buttons),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
-                        text = "Notification.Action + PendingIntent",
+                        text = stringResource(R.string.notification_buttons_detail),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -473,16 +431,22 @@ private fun PrototypeCard(
                 Button(
                     onClick = if (serviceRunning) onStop else onStart,
                 ) {
-                    Text(if (serviceRunning) "Остановить" else "Запустить")
+                    Text(
+                        if (serviceRunning) {
+                            stringResource(R.string.stop)
+                        } else {
+                            stringResource(R.string.start)
+                        },
+                    )
                 }
                 OutlinedButton(onClick = onRefresh) {
-                    Text("Обновить")
+                    Text(stringResource(R.string.refresh))
                 }
             }
             if (!listenerEnabled) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Слушатель уведомлений выключен: уведомление будет с заглушкой, пока доступ не выдан.",
+                    text = stringResource(R.string.listener_disabled_warning),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -490,7 +454,7 @@ private fun PrototypeCard(
             if (!notificationGranted) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "POST_NOTIFICATIONS не выдан: система может не показать уведомление.",
+                    text = stringResource(R.string.notifications_disabled_warning),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -529,17 +493,17 @@ private fun PromotionCard(
 ) {
     val explanation = when {
         !serviceRunning ->
-            "Сервис не запущен. Запустите его на шаге 2 и посмотрите значения ниже."
+            stringResource(R.string.promotion_service_not_running)
         hasPromotable == false ->
-            "hasPromotableCharacteristics() = false: уведомление не выполняет требования promoted. Проверьте ongoing, title, стиль, отсутствие custom view и важность канала."
+            stringResource(R.string.promotion_not_promotable)
         canPostPromoted == false ->
-            "canPostPromotedNotifications() = false: Live Updates выключены для приложения или системы. Откройте экран Live Updates."
+            stringResource(R.string.promotion_cannot_post)
         actuallyPromoted == true ->
-            "Система присвоила FLAG_PROMOTED_ONGOING. Чип должен быть доступен в строке состояния; на OEM-прошивках поведение может отличаться."
+            stringResource(R.string.promotion_promoted)
         actuallyPromoted == false ->
-            "Система не присвоила FLAG_PROMOTED_ONGOING. Для медиаплееров это ожидаемо: официальные Live Updates в Android 16/17 не обещают чип для музыки. Уведомление останется в шторке."
+            stringResource(R.string.promotion_not_promoted)
         else ->
-            "Проверка выполняется после публикации уведомления."
+            stringResource(R.string.promotion_checking)
     }
 
     Card(
@@ -549,7 +513,7 @@ private fun PromotionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "3. Проверка чипа",
+                text = stringResource(R.string.promotion_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -583,10 +547,10 @@ private fun PromotionCard(
             Spacer(modifier = Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = onRefresh) {
-                    Text("Проверить снова")
+                    Text(stringResource(R.string.check_again))
                 }
                 TextButton(onClick = { openPromotionSettings(context) }) {
-                    Text("Live Updates")
+                    Text(stringResource(R.string.live_updates))
                 }
             }
         }
@@ -608,8 +572,8 @@ private fun DiagnosticRow(label: String, value: Boolean?) {
         )
         Text(
             text = when (value) {
-                true -> "да"
-                false -> "нет"
+                true -> stringResource(R.string.diagnostic_yes)
+                false -> stringResource(R.string.diagnostic_no)
                 null -> "-"
             },
             style = MaterialTheme.typography.labelMedium,
@@ -624,58 +588,11 @@ private fun DiagnosticRow(label: String, value: Boolean?) {
 }
 
 @Composable
-private fun PermissionRow(
-    title: String,
-    detail: String,
-    granted: Boolean,
-    action: String,
-    onAction: () -> Unit,
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.bodyMedium)
-                Text(
-                    text = detail,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            Text(
-                text = if (granted) "OK" else "НЕТ",
-                style = MaterialTheme.typography.labelMedium,
-                color = if (granted) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.error
-                },
-                fontWeight = FontWeight.SemiBold,
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-        ) {
-            if (granted) {
-                OutlinedButton(onClick = onAction) {
-                    Text(action)
-                }
-            } else {
-                Button(onClick = onAction) {
-                    Text(action)
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun AlbumArt(bitmap: Bitmap?, size: androidx.compose.ui.unit.Dp) {
     if (bitmap != null) {
         Image(
             bitmap = bitmap.asImageBitmap(),
-            contentDescription = "Обложка",
+            contentDescription = stringResource(R.string.album_art),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(size)
@@ -703,19 +620,25 @@ private fun startLiveUpdate(context: Context) {
     runCatching {
         LiveUpdateService.start(context)
     }.onFailure {
-        LiveUpdateStatus.lastError = "Не удалось запустить сервис: ${it.message}"
+        LiveUpdateStatus.lastError = context.getString(
+            R.string.error_start_service,
+            it.message.orEmpty(),
+        )
     }
 }
 
-private fun openIntent(context: Context, intent: Intent) {
+internal fun openIntent(context: Context, intent: Intent) {
     runCatching {
         context.startActivity(intent)
     }.onFailure {
-        LiveUpdateStatus.lastError = "Не удалось открыть настройки: ${it.message}"
+        LiveUpdateStatus.lastError = context.getString(
+            R.string.error_open_settings,
+            it.message.orEmpty(),
+        )
     }
 }
 
-private fun openPromotionSettings(context: Context) {
+internal fun openPromotionSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_PROMOTION_SETTINGS)
         .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
     val opened = runCatching { context.startActivity(intent) }.isSuccess

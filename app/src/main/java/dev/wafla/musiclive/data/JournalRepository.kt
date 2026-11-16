@@ -1,50 +1,47 @@
 package dev.wafla.musiclive.data
 
+import androidx.annotation.ArrayRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import dev.wafla.musiclive.R
 
 data class UpdateEntry(
     val version: String,
-    val title: String,
-    val changes: List<String>,
-    val imageRes: Int,
+    @StringRes val titleRes: Int,
+    @ArrayRes val changesRes: Int,
+    @DrawableRes val imageRes: Int,
 )
 
 object JournalRepository {
     val updates = listOf(
         UpdateEntry(
+            version = "1.4 beta",
+            titleRes = R.string.journal_1_4_title,
+            changesRes = R.array.journal_1_4_changes,
+            imageRes = R.drawable.journal_1_4,
+        ),
+        UpdateEntry(
+            version = "1.3",
+            titleRes = R.string.journal_1_3_title,
+            changesRes = R.array.journal_1_3_changes,
+            imageRes = R.drawable.journal_1_3,
+        ),
+        UpdateEntry(
             version = "1.2",
-            title = "Релиз 1.2",
-            changes = listOf(
-                "Добавлены картинки в журнал обновлений",
-                "Добавлены нормальные кнопки на главную чтобы интерфейс был понятнее",
-                "Улучшены так же и функции показа Live уведомления",
-            ),
+            titleRes = R.string.journal_1_2_title,
+            changesRes = R.array.journal_1_2_changes,
             imageRes = R.drawable.journal_1_2,
         ),
         UpdateEntry(
             version = "1.1",
-            title = "Обновление иконки",
-            changes = listOf(
-                "Новая иконка приложения",
-                "Фон иконки в тёмном акценте Monet",
-                "Новая иконка используется в приложении, уведомлении и чипе",
-                "Цвета иконки подстраиваются под тему системы",
-                "Иконка на чипе увеличен, иконка приложения уменьшена",
-            ),
+            titleRes = R.string.journal_1_1_title,
+            changesRes = R.array.journal_1_1_changes,
             imageRes = R.drawable.journal_1_1,
         ),
         UpdateEntry(
             version = "1.0",
-            title = "Основные изменения",
-            changes = listOf(
-                "Live Update чип в статус баре",
-                "Управление воспроизведением из уведомления",
-                "Диагностика promoted-статуса",
-                "Прошло и осталось в развёрнутом уведомлении",
-                "Короткие кнопки: Назад, Пауза, Вперёд",
-                "Две вкладки: Главная и Журнал",
-                "Динамические цвета системы",
-            ),
+            titleRes = R.string.journal_1_0_title,
+            changesRes = R.array.journal_1_0_changes,
             imageRes = R.drawable.journal_1_0,
         ),
     )

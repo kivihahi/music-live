@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import dev.wafla.musiclive.R
 import dev.wafla.musiclive.data.AppPrefs
 import dev.wafla.musiclive.data.MusicRepository
 import dev.wafla.musiclive.notification.LiveUpdateStatus
@@ -108,13 +109,18 @@ class LiveUpdateService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Cannot enter foreground", e)
-            LiveUpdateStatus.lastError = "Не удалось показать уведомление: ${e.message}"
+            LiveUpdateStatus.lastError = getString(
+                R.string.error_show_notification,
+                e.message.orEmpty(),
+            )
             try {
                 notificationManager.notify(NotificationFactory.NOTIFICATION_ID, notification)
             } catch (notifyError: Exception) {
                 Log.e(TAG, "Cannot post notification", notifyError)
-                LiveUpdateStatus.lastError =
-                    "Не удалось опубликовать уведомление: ${notifyError.message}"
+                LiveUpdateStatus.lastError = getString(
+                    R.string.error_post_notification,
+                    notifyError.message.orEmpty(),
+                )
             }
         }
         inspectPromotion(notification)

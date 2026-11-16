@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
-import androidx.annotation.RequiresApi
 import dev.wafla.musiclive.MainActivity
 import dev.wafla.musiclive.R
 import dev.wafla.musiclive.data.MediaAction
@@ -43,16 +42,23 @@ object NotificationFactory {
     ): Notification {
         ensureChannel(context)
 
-        val title = nowPlaying?.title ?: "Нет активного плеера"
-        val artist = nowPlaying?.artist ?: "Включите музыку в любом плеере"
+        val title = nowPlaying?.title ?: context.getString(R.string.notification_no_player)
+        val artist = nowPlaying?.artist ?: context.getString(R.string.notification_start_music)
         val position = nowPlaying?.positionMs ?: 0L
         val duration = nowPlaying?.durationMs ?: 0L
+        val elapsed = if (duration > 0L) position.coerceIn(0L, duration) else position
+        val timeText = if (nowPlaying == null) {
+            artist
+        } else if (duration > 0L) {
+            "${formatDuration(elapsed)} / ${formatDuration(duration)}"
+        } else {
+            formatDuration(elapsed)
+        }
 
         val builder = Notification.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_mark)
-            .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_notification_large))
             .setContentTitle(title)
-            .setContentText(artist)
+            .setContentText(timeText)
             .setContentIntent(contentIntent(context))
             .setCategory(Notification.CATEGORY_TRANSPORT)
             .setVisibility(Notification.VISIBILITY_PUBLIC)
@@ -66,66 +72,57 @@ object NotificationFactory {
             builder.setRequestPromotedOngoing(true)
         }
 
-        if (Build.VERSION.SDK_INT >= 37) {
-            builder.setStyle(metricStyle(nowPlaying))
-        } else {
-            builder.setStyle(
-                Notification.BigTextStyle().bigText(
-                    "$title\n$artist\n${formatDuration(position)} / ${formatDuration(duration)}",
-                ),
-            )
+        val maxProgress = duration.coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
+        val currentProgress = elapsed.coerceIn(0L, maxProgress.toLong()).toInt()
+        val progressStyle = Notification.ProgressStyle()
+            .setProgressIndeterminate(duration <= 0L)
+            .setStyledByProgress(true)
+        if (duration > 0L) {
+            progressStyle
+                .addProgressSegment(Notification.ProgressStyle.Segment(maxProgress))
+                .setProgress(currentProgress)
         }
+        builder.setStyle(progressStyle)
 
         if (includeActions) {
             builder.addAction(
                 action(
                     context,
                     R.drawable.ic_skip_previous,
-                    "Назад",
+                    context.getString(R.string.action_back),
                     MediaAction.PREVIOUS,
                 ),
             )
             if (nowPlaying?.isPlaying == true) {
                 builder.addAction(
-                    action(context, R.drawable.ic_pause, "Пауза", MediaAction.TOGGLE),
+                    action(
+                        context,
+                        R.drawable.ic_pause,
+                        context.getString(R.string.action_pause),
+                        MediaAction.TOGGLE,
+                    ),
                 )
             } else {
                 builder.addAction(
-                    action(context, R.drawable.ic_play, "Играть", MediaAction.TOGGLE),
+                    action(
+                        context,
+                        R.drawable.ic_play,
+                        context.getString(R.string.action_play),
+                        MediaAction.TOGGLE,
+                    ),
                 )
             }
             builder.addAction(
-                action(context, R.drawable.ic_skip_next, "Вперёд", MediaAction.NEXT),
+                action(
+                    context,
+                    R.drawable.ic_skip_next,
+                    context.getString(R.string.action_forward),
+                    MediaAction.NEXT,
+                ),
             )
         }
 
         return builder.build()
-    }
-
-    @RequiresApi(37)
-    private fun metricStyle(nowPlaying: NowPlaying?): Notification.MetricStyle {
-        val position = nowPlaying?.positionMs ?: 0L
-        val duration = nowPlaying?.durationMs ?: 0L
-        val elapsed = if (nowPlaying == null) "-" else formatDuration(position)
-        val style = Notification.MetricStyle()
-            .addMetric(
-                Notification.Metric(
-                    Notification.Metric.FixedText(elapsed),
-                    "Прошло",
-                ),
-            )
-
-        if (nowPlaying != null && duration > 0L) {
-            val remaining = (duration - position).coerceAtLeast(0L)
-            style.addMetric(
-                Notification.Metric(
-                    Notification.Metric.FixedText(formatDuration(remaining)),
-                    "Осталось",
-                ),
-            )
-        }
-
-        return style.setCriticalMetric(Notification.MetricStyle.METRIC_INDEX_NONE)
     }
 
     private fun contentIntent(context: Context): PendingIntent {

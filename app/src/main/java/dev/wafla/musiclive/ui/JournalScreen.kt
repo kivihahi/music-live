@@ -22,8 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import dev.wafla.musiclive.R
 import dev.wafla.musiclive.data.JournalRepository
 import dev.wafla.musiclive.data.UpdateEntry
 
@@ -44,12 +47,12 @@ fun JournalScreen(innerPadding: PaddingValues) {
         item {
             Column {
                 Text(
-                    text = "Описание обновлений",
+                    text = stringResource(R.string.journal_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Text(
-                    text = "Что изменилось в приложении",
+                    text = stringResource(R.string.journal_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -81,19 +84,19 @@ private fun UpdateCard(update: UpdateEntry) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Версия ${update.version}",
+                text = stringResource(R.string.journal_version, update.version),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = update.title,
+                text = stringResource(update.titleRes),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(6.dp))
-            update.changes.forEach { change ->
+            stringArrayResource(update.changesRes).forEach { change ->
                 Text(
                     text = "• $change",
                     style = MaterialTheme.typography.bodySmall,

@@ -3,4 +3,125 @@
     <string name="listener_label">Music Live: доступ к медиасессиям</string>
     <string name="channel_name">Сейчас играет</string>
     <string name="channel_description">Текущий трек и управление воспроизведением</string>
+
+    <string name="tab_home">Главная</string>
+    <string name="tab_journal">Журнал</string>
+    <string name="tab_settings">Настройки</string>
+
+    <string name="now_playing_title">Сейчас играет</string>
+    <string name="no_active_media_session">Нет активной медиасессии</string>
+    <string name="start_playback_hint">Включите музыку в любом плеере</string>
+    <string name="album_art">Обложка</string>
+
+    <string name="permissions_title">Доступ</string>
+    <string name="permissions_subtitle">Онбординг: доступ к уведомлениям</string>
+    <string name="permission_listener_title">Слушатель уведомлений</string>
+    <string name="permission_listener_detail">Нужен для MediaSessionManager.getActiveSessions()</string>
+    <string name="permission_notifications_title">POST_NOTIFICATIONS</string>
+    <string name="permission_notifications_detail">Разрешение на показ уведомлений</string>
+    <string name="permission_live_updates_title">Live Updates</string>
+    <string name="permission_live_updates_detail">canPostPromotedNotifications() = %1$s</string>
+    <string name="action_allow">Разрешить</string>
+    <string name="action_settings">Настройки</string>
+    <string name="status_ok">OK</string>
+    <string name="status_no">НЕТ</string>
+
+    <string name="live_update_title">2. Live Update</string>
+    <string name="live_update_description">Одно ongoing-уведомление с двумя метриками: прошло и осталось</string>
+    <string name="previous_track">Предыдущий трек</string>
+    <string name="next_track">Следующий трек</string>
+    <string name="pause">Пауза</string>
+    <string name="play">Играть</string>
+    <string name="notification_buttons">Кнопки в уведомлении</string>
+    <string name="notification_buttons_detail">Notification.Action + PendingIntent</string>
+    <string name="stop">Остановить</string>
+    <string name="start">Запустить</string>
+    <string name="refresh">Обновить</string>
+    <string name="listener_disabled_warning">Слушатель уведомлений выключен: уведомление будет с заглушкой, пока доступ не выдан.</string>
+    <string name="notifications_disabled_warning">POST_NOTIFICATIONS не выдан: система может не показать уведомление.</string>
+
+    <string name="promotion_title">3. Проверка чипа</string>
+    <string name="promotion_service_not_running">Сервис не запущен. Запустите его на шаге 2 и посмотрите значения ниже.</string>
+    <string name="promotion_not_promotable">hasPromotableCharacteristics() = false: уведомление не выполняет требования promoted. Проверьте ongoing, title, стиль, отсутствие custom view и важность канала.</string>
+    <string name="promotion_cannot_post">canPostPromotedNotifications() = false: Live Updates выключены для приложения или системы. Откройте экран Live Updates.</string>
+    <string name="promotion_promoted">Система присвоила FLAG_PROMOTED_ONGOING. Чип должен быть доступен в строке состояния; на OEM-прошивках поведение может отличаться.</string>
+    <string name="promotion_not_promoted">Система не присвоила FLAG_PROMOTED_ONGOING. Для медиаплееров это ожидаемо: официальные Live Updates в Android 16/17 не обещают чип для музыки. Уведомление останется в шторке.</string>
+    <string name="promotion_checking">Проверка выполняется после публикации уведомления.</string>
+    <string name="check_again">Проверить снова</string>
+    <string name="live_updates">Live Updates</string>
+    <string name="diagnostic_yes">да</string>
+    <string name="diagnostic_no">нет</string>
+
+    <string name="error_start_service">Не удалось запустить сервис: %1$s</string>
+    <string name="error_open_settings">Не удалось открыть настройки: %1$s</string>
+    <string name="error_show_notification">Не удалось показать уведомление: %1$s</string>
+    <string name="error_post_notification">Не удалось опубликовать уведомление: %1$s</string>
+
+    <string name="language_title">Язык</string>
+    <string name="language_subtitle">Язык интерфейса приложения</string>
+    <string name="language_system">Системный</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+    <string name="language_ukrainian">Українська</string>
+
+    <string name="about_title">О приложении</string>
+    <string name="about_subtitle">Автор, лицензия и обратная связь</string>
+    <string name="about_author_label">Автор</string>
+    <string name="about_github_label">GitHub</string>
+    <string name="about_license_label">Лицензия</string>
+    <string name="about_license_value">MIT License</string>
+    <string name="about_report_bug">Сообщить об ошибке</string>
+    <string name="about_report_subject">Music Live: сообщение об ошибке</string>
+
+    <string name="journal_title">Описание обновлений</string>
+    <string name="journal_subtitle">Что изменилось в приложении</string>
+    <string name="journal_version">Версия %1$s</string>
+    <string name="journal_1_4_title">Кодовое: dango</string>
+    <string-array name="journal_1_4_changes">
+        <item>text beta</item>
+    </string-array>
+    <string name="journal_1_3_title">Кодовое: syrup</string>
+    <string-array name="journal_1_3_changes">
+        <item>Добавлены украинский и англиский языки</item>
+        <item>Добавлена вкладка настройки</item>
+        <item>Появился приведственный экран</item>
+    </string-array>
+    <string name="journal_1_2_title">Релиз 1.2</string>
+    <string-array name="journal_1_2_changes">
+        <item>Добавлены картинки в журнал обновлений</item>
+        <item>Добавлены нормальные кнопки на главную чтобы интерфейс был понятнее</item>
+        <item>Улучшены так же и функции показа Live уведомления</item>
+    </string-array>
+    <string name="journal_1_1_title">Обновление иконки</string>
+    <string-array name="journal_1_1_changes">
+        <item>Новая иконка приложения</item>
+        <item>Фон иконки в тёмном акценте Monet</item>
+        <item>Новая иконка используется в приложении, уведомлении и чипе</item>
+        <item>Цвета иконки подстраиваются под тему системы</item>
+        <item>Иконка на чипе увеличен, иконка приложения уменьшена</item>
+    </string-array>
+    <string name="journal_1_0_title">Основные изменения</string>
+    <string-array name="journal_1_0_changes">
+        <item>Live Update чип в статус баре</item>
+        <item>Управление воспроизведением из уведомления</item>
+        <item>Диагностика promoted-статуса</item>
+        <item>Прошло и осталось в развёрнутом уведомлении</item>
+        <item>Короткие кнопки: Назад, Пауза, Вперёд</item>
+        <item>Две вкладки: Главная и Журнал</item>
+        <item>Динамические цвета системы</item>
+    </string-array>
+
+    <string name="welcome_title">Добро пожаловать в Music Live</string>
+    <string name="welcome_text">Приложение показывает текущий трек и управляет музыкой прямо из Live Update. Для работы нужен доступ к уведомлениям.</string>
+    <string name="ok">ОК</string>
+
+    <string name="notification_no_player">Нет активного плеера</string>
+    <string name="notification_start_music">Включите музыку в любом плеере</string>
+    <string name="media_session_active">Медиасессия активна</string>
+    <string name="action_back">Назад</string>
+    <string name="action_pause">Пауза</string>
+    <string name="action_play">Играть</string>
+    <string name="action_forward">Вперёд</string>
+    <string name="metric_elapsed">Прошло</string>
+    <string name="metric_remaining">Осталось</string>
 </resources>

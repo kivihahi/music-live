@@ -24,6 +24,7 @@ object MusicRepository {
     private var metadata: MediaMetadata? = null
     private var playbackState: PlaybackState? = null
     private var tickerRunning = false
+    private var fallbackTitle = "Music"
 
     private val ticker = object : Runnable {
         override fun run() {
@@ -32,6 +33,10 @@ object MusicRepository {
                 handler.postDelayed(this, TICK_MS)
             }
         }
+    }
+
+    fun setFallbackTitle(title: String) {
+        fallbackTitle = title
     }
 
     fun bind(newController: MediaController) {
@@ -138,7 +143,7 @@ object MusicRepository {
         val state = playbackState ?: current.playbackState
         val duration = md?.getLong(MediaMetadata.METADATA_KEY_DURATION)?.coerceAtLeast(0L) ?: 0L
         val title = md?.getString(MediaMetadata.METADATA_KEY_TITLE)?.takeIf { it.isNotBlank() }
-            ?: "Медиасессия активна"
+            ?: fallbackTitle
         val artist = md?.getString(MediaMetadata.METADATA_KEY_ARTIST)?.takeIf { it.isNotBlank() }
             ?: md?.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST)?.takeIf { it.isNotBlank() }
             ?: current.packageName
